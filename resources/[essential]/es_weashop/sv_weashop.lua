@@ -10,7 +10,7 @@ AddEventHandler('CheckMoneyForWea', function(weapon,price)
 			if (tonumber(user.money) >= tonumber(price)) then
 				local player = user.identifier
 				local nb_weapon = 0
-				MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @username",{['@username'] = player}, function (result)
+				MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @identifier",{['@identifier'] = player}, function (result)
 					if result then
 						for k,v in ipairs(result) do
 							nb_weapon = nb_weapon + 1
@@ -19,8 +19,8 @@ AddEventHandler('CheckMoneyForWea', function(weapon,price)
 					if (tonumber(max_number_weapons) > tonumber(nb_weapon)) then
 						-- Pay the shop (price)
 						user:removeMoney((price))
-						MySQL.Async.execute("INSERT INTO user_weapons (identifier,weapon_model,withdraw_cost) VALUES (@username,@weapon,@cost)",
-						{['@username'] = player, ['@weapon'] = weapon, ['@cost'] = (price)/cost_ratio})
+						MySQL.Async.execute("INSERT INTO user_weapons (identifier,weapon_model,withdraw_cost) VALUES (@identifier,@weapon,@cost)",
+						{['@identifier'] = player, ['@weapon'] = weapon, ['@cost'] = (price)/cost_ratio})
 						-- Trigger some client stuff
 						TriggerClientEvent('FinishMoneyCheckForWea',source)
 						TriggerClientEvent("citizenv:notify", source, "CHAR_AMMUNATION", 1, "AMMUNATION", false, "Amuse toi bien avec ces joujous!\n")
@@ -53,7 +53,7 @@ AddEventHandler("weaponshop:GiveWeaponsToPlayer", function(player)
 			local playerID = user.identifier
 			local delay = nil
 
-			MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @username",{['@username'] = playerID}, function (result)
+			MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @identifier",{['@identifier'] = playerID}, function (result)
 				delay = 2000
 				if(result)then
 					for k,v in ipairs(result) do
@@ -74,7 +74,7 @@ AddEventHandler("weaponshop:GiveWeapons", function()
 			local playerID = user.identifier
 			local delay = nil
 
-			MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @username",{['@username'] = playerID}, function (result)
+			MySQL.Async.fetchAll("SELECT * FROM user_weapons WHERE identifier = @identifier",{['@identifier'] = playerID}, function (result)
 				delay = 2000
 				if(result)then
 					for k,v in ipairs(result) do
